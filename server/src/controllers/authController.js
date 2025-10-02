@@ -52,13 +52,25 @@ exports.login = async (req, res) => {
         const isMatch = await bcrypt.compare(password, user.password);
 
         if (isMatch) {
-            req.session.userId = user.id;
-            req.session.username = user.username;
-            return res.status(200).json({ 
-                message: 'Login bem-sucedido!',
-                user: { id: user.id, username: user.username }
-            });
-        } else {
+                //Se a senha estiver correta, armazene dados de sessão.
+                req.session.userId = user.id;
+                req.session.username = user.username;
+                
+                //Força a sessão salvar antes de enviar a resposta
+                req.session.save(err => {
+                    if (err) {
+                        console.error("Error saving session:", err);
+                        return res.status(500).json({ message: 'Error saving session.' });
+                    }
+                    
+                    //Apenas depois de salvar enviar a resposta de sucesso.
+                    return res.status(200).json({ 
+                        message: 'Login successful!',
+                        user: { id: user.id, username: user.username }
+                    });
+                });
+
+            } else {
             return res.status(401).json({ message: 'Usuário ou senha inválido!' });
         }
     } catch (error) {
@@ -67,7 +79,7 @@ exports.login = async (req, res) => {
     }
 };
 
-// --- FUNÇÃO DE LOGOUT (SEM MUDANÇAS) ---
+// --- FUNÇÃO DE LOGOUT ---
 exports.logout = (req, res) => {
     req.session.destroy(err => {
         if (err) {

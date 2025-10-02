@@ -27,7 +27,9 @@ function ChatPage() {
     // Limpa as mensagens antigas antes de buscar as novas
     setMessages([]); 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/messages/${user.username}`);
+      const response = await fetch(`${API_BASE_URL}/api/messages/${user.username}`,{
+        credentials: 'include'
+      });
       if (!response.ok) {
         throw new Error('Falha ao buscar o histórico de mensagens.');
       }
@@ -56,7 +58,9 @@ function ChatPage() {
         const loggedInUser = JSON.parse(sessionStorage.getItem('user'));
         setCurrentUser(loggedInUser);
         
-        const usersResponse = await fetch(`${API_BASE_URL}/api/users`);
+        const usersResponse = await fetch(`${API_BASE_URL}/api/users`,{
+          credentials: 'include'
+        });
         const usersData = await usersResponse.json();
         setUsers(usersData);
       } catch (error) {

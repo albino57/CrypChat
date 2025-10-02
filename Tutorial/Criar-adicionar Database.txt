@@ -1,0 +1,17 @@
+23:37 29/09/2025
+
+---Criando um Database---
+
+-Para todos esses comandos, o rode no Terminal e no Diretório SuaAplicação/server
+
+1- Para criar um banco:
+	npm run db:init
+
+2- Para adicionar um usuário ao database:
+	npm run create-user usuario1 umasenhasecreta
+
+3- Para mudar o usuário do database:
+	npm run update-user usuario1 usuario222
+
+4- Para mudar a senha do usuário do database:
+	npm run update-password usuario222 umasenhasecretaDEMAIS

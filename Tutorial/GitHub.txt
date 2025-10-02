@@ -1,0 +1,40 @@
+01:09 02/10/2025
+
+↓ Tipos de commits ↓
+
+feat:-------Nova funcionalidade (feature). Use quando adicionar algo novo que não existia.
+style:------Mudanças visuais que não alteram lógica (cores, fontes, espaçamento, formatação).
+fix:--------Correção de bugs ou errors.
+docs:-------Mudanças na documentação (como o README.md).
+chore:------Tarefas de manutenção que não alteram lógica nem funcionalidade (atualizar pacotes, configurar CI).
+refactor:---Mudanças no código que não adicionam funcionalidade nem consertam bugs, apenas melhoram a estrutura ou legibilidade.
+build:------Mudanças em scripts de build, dependências ou ferramentas (ex: Webpack, Docker).build: adiciona Dockerfile para deploy.
+ci:---------Mudanças em configuração de Integração Contínua (GitHub Actions, GitLab CI).
+perf:-------Melhorias de performance (deixar o código mais rápido ou eficiente).
+test:-------Adição ou modificação de testes automatizados (não altera funcionalidade).
+revert:-----Reverte um commit anterior.
+
+ex: git commit -m "fix: Bug consertado no botão Aplicar"
+
+↑------------------↑
+
+↓ Passo rápidos de commits ↓
+
+	git status (para ver o que mudou).
+
+	git add . (para preparar tudo para o commit).
+	
+	git add arquivo1 (prepara o arquivo1 para o commit).
+
+	git commit -m "" (para registrar a versão).
+
+	git push (para enviar para o GitHub e deixar tudo salvo na nuvem).
+	
+	git commit -a -m "" (É um atalho prático para quando você só modificou arquivos que já estavam no git e quer comitar tudo de uma vez.)
+	
+	#A flag '--cached' apaga apenas do GIT, para apagar do GIT e local não use a FLAG.
+	git rm --cached <nome_do_arquivo> (remove o arquivo)
+
+	git rm -r --cached <nome_da_pasta> (remove pasta e arquivos do GitHub)
+
+↑--------------------------↑

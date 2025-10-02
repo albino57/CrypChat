@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "db:init": "node src/scripts/init-db.js",
+    "create-user": "node src/scripts/create-user.js",
+    "update-password": "node src/scripts/update-password.js",
+    "update-user": "node src/scripts/update-user.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "session-file-store": "^1.5.0",
+    "socket.io": "^4.8.1",
+    "sqlite3": "^5.1.7"
+  }
+}

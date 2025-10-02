@@ -1,0 +1,31 @@
+16:43 25/09/2025
+
+---INSTALAR AMBIENTE---
+1- Instalar o node.JS ( https://nodejs.org/ )
+	Depois da instalação, abra seu terminal e digite node -v e npm -v para checar a 'versão' e se está 'instalado'
+
+2- Criar diretório principal do projeto e dentro dele crie a pasta ' server '
+
+3- Dentro da pasta server rode no terminal o comando para criar o projeto backend (servidor):
+	npm init -y
+
+4- No diretório principal do projeto rode o comando para criar o frontend (cliente) com Vite (React):
+	npm create vite@latest client -- --template react
+
+OBS:	client será o nome da pasta do nosso frontend.
+	--template react especifica que queremos um projeto React.
+
+5- Instale também o React Router com o terminal dentro do diretório minhaAplicação/client
+	npm install react-router-dom
+
+6- Instale a Biblioteca Cliente do Socket.IO no diretório minhaAplicação/client
+	npm install socket.io-client
+
+
+---INSTALAR DEPENDÊNCIAS DO BACKEND---
+
+1- No terminal, dentro da pasta diretório_principal/server, rode o seguinte comando:
+	npm install express sqlite3 bcryptjs dotenv express-session session-file-store
+
+2- Instale a Biblioteca do Socket.IO no diretório minhaAplicação/server
+	npm install socket.io

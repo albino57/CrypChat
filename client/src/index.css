@@ -1,0 +1,467 @@
+/***↓Global Variables↓***/
+:root {
+    --background-color: #15161e;
+    --header-color: #2c2a2a;
+    --sidebar-color: #1e1e1e;
+    --areatext-color: #1e1e1e;
+    --inputarea-color: #1e1e1e;
+    --writen1-color: #e0e0e0;
+}
+
+/***↑Global Variables↑***/
+
+*, /*Universal box-sizing reset for more intuitive and predictable layouts.*/
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+/*----------------------------↓ Global Settings ↓----------------------------*/
+body,
+html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: sans-serif;
+    background-color: var(--background-color);
+    color: var(--writen1-color);
+}
+
+.container {
+    /*Default style Mobile*/
+    display: grid;
+    width: 100%;
+    height: 100vh;  /*For old browsers*/
+    height: 100dvh; /*For new/modern browsers*/
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 50px 1fr 100px;
+    grid-template-areas: /* define the design of our layout*/
+        "header   header"
+        "sidebar  messages"
+        "sidebar  input";
+    border-radius: 0;
+    /*Borderless*/
+    transition: grid-template-columns 0.5s ease-in-out;
+}
+
+.container.sidebar-collapsed {
+    grid-template-columns: 50px 1fr; /*When the container has this class, the sidebar will be 50px*/
+}
+
+/*-----↓ Big Screen ↓-----*/
+@media (min-width: 768px) {
+    .container {
+        width: 768px;
+        height: 70vh;
+        grid-template-columns: 1fr 3fr;
+        grid-template-areas:
+            "header   header"
+            "sidebar  messages"
+            "sidebar  input";
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+}
+
+/* Assign each item to an area of our design*/
+.chat-header {
+    grid-area: header;
+}
+
+.contacts-sidebar {
+    grid-area: sidebar;
+}
+
+.messages-area {
+    grid-area: messages;
+}
+
+.message-input-area {
+    grid-area: input;
+}
+
+/*Basic visual styles to each area*/
+.chat-header, .contacts-sidebar, .messages-area, .message-input-area {
+    border: 1px solid #333;
+    /*Subtle border to separate areas*/
+    padding: 10px;
+    background-color: var(--header-color);
+}
+
+.error-message {
+    color: #ff6b6b;
+    background-color: rgba(255, 107, 107, 0.1);
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ff6b6b;
+    margin-bottom: 20px;
+}
+
+/*----------------------------↑ Global Settings ↑----------------------------*/
+
+/*----------------------------↓ Contacts List ↓----------------------------*/
+.contact { /*Style for each contact item*/
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    color: var(--writen1-color);
+    transition: background-color 0.2s;
+}
+
+.contact:hover {
+    background-color: #2c2a2a;
+}
+
+/*Style for the "avatar" (the initial letter)*/
+.contact-avatar {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%; /*Set this as a circu*/
+    background-color: #7f4311;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    margin-right: 10px; /*Space between avatar and name*/
+    flex-shrink: 0; /*Prevents the avatar from shrinking*/
+}
+
+/* Adicione este estilo para o contato selecionado */
+.contact.selected {
+    background-color: #dcc10fb9; /* Uma cor de destaque forte */
+    font-weight: bold;
+}
+
+/* --- RULES FOR THE SHRINKING STATE --- */
+
+/*When the sidebar is collapsed, it HIDES the contact name*/
+.container.sidebar-collapsed .contact-name {
+    display: none;
+}
+
+/*And also center the avatar in the collapsed sidebar*/
+.container.sidebar-collapsed .contact {
+    justify-content: center;
+}
+
+.container.sidebar-collapsed .contact-avatar {
+    margin-right: 0; /*Remove margin when there is no name*/
+}
+/*----------------------------↑ Contacts List ↑----------------------------*/
+
+/*----------------------------↓ Header ↓----------------------------*/
+.chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/*-----↓ Title Setup ↓-----*/
+.chat-header .setup-title {
+    color: #f3df4a;
+    cursor: default;
+}
+
+.chat-header .setup-title:hover {
+    /*:hover: When the mouse is over the element*/
+    transform: scale(1.1);
+}
+
+.chat-header .setup-title:active {
+    /*:active: When the element is being clicked*/
+    transform: scale(0.95);
+}
+
+/*-----↑ Title Setup ↑-----*/
+
+/*-----↓ Button Setup ↓-----*/
+.chat-header .setup-btn {
+    background-color: #7f4311;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    width: 35px;
+    border-radius: 20%;
+
+}
+
+.chat-header .setup-btn img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 20%;
+}
+
+.chat-header .setup-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.1);
+}
+
+.chat-header .setup-btn:active {
+    transform: scale(0.95);
+}
+
+.chat-header .setup-btn,
+.chat-header .setup-btn img {
+    transition: all 0.2s ease-in-out;
+}
+/*-----↑ Button Setup ↑-----*/
+
+/*-----↓ Setup Dropdown Menu ↓-----*/
+.setup-container {
+    position: relative; /* Container para o botão e o menu. 'position: relative' é a chave! */
+}
+
+/*Dropdown Menu*/
+.setup-menu {
+    display: none; /* ESCONDIDO por padrão */
+    position: absolute; /* Permite posicioná-lo em relação ao container */
+    right: 0; /* Alinha com o lado direito do container */
+    top: 45px; /* Posição abaixo do botão de setup */
+    background-color: var(--header-color);
+    border: 1px solid #444;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    width: 150px;
+    z-index: 10; /* Garante que o menu fique por cima de outros elementos */
+}
+
+/* Classe que o JavaScript vai adicionar para MOSTRAR o menu */
+.setup-menu.show {
+    display: block;
+}
+
+/* Estilo dos itens dentro do menu */
+.setup-menu .menu-item {
+    display: block;
+    padding: 10px 15px;
+    color: var(--writen1-color);
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.setup-menu .menu-item:hover {
+    background-color: #3c3a3a;
+}
+
+.setup-menu .logout-item {
+    color: #ff6b6b; /* Cor de destaque para o botão de sair */
+}
+
+.setup-menu hr {
+    border: none;
+    border-top: 1px solid #444;
+    margin: 5px 0;
+}
+/*-----↑ Setup Dropdown Menu ↑-----*/
+
+
+/*----------------------------↑ Header ↑----------------------------*/
+
+
+/*----------------------------↓ Sidebar ↓----------------------------*/
+.contacts-sidebar {
+    background-color: var(--sidebar-color);
+    overflow: hidden; /*When the sidebar is collapsed, long text won't leak out. It will simply be cut off*/
+    white-space: nowrap; /*Prevents text from breaking during animation*/
+    display: flex; /*Transform sidebar in a flex container*/
+    flex-direction: column; /*Forces the items inside the container to line up in a vertical column.*/
+    gap: 5px;
+}
+
+/*----------------------------↑ Sidebar ↑----------------------------*/
+
+
+/*----------------------------↓ Area ↓----------------------------*/
+.messages-area {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    /*Space between the messages*/
+    font-size: 10pt;
+    background-color: var(--areatext-color);
+    overflow-y: auto;
+    /**/
+}
+
+/*----------------------------↑ Area ↑----------------------------*/
+
+
+/*----------------------------↓ Input Area ↓----------------------------*/
+.message-input-area {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--inputarea-color);
+}
+
+/*----------------------------↑ Input Area ↑----------------------------*/
+
+
+/*----------------------------↓ Functions Bar ↓----------------------------*/
+.functions-bar {
+    padding-bottom: 5px;
+    font-size: 0.8em;
+    color: #888;
+}
+
+/*----------------------------↑ Functions Bar ↑----------------------------*/
+
+
+/*----------------------------↓ Area Textarea ↓----------------------------*/
+.message-input-area textarea {
+    height: 100%;
+    resize: none;
+    /* Impede que o usuário redimensione a textarea */
+    background-color: #252525;
+    border: 1px solid #444;
+    color: #e0e0e0;
+    padding: 5px;
+    font-size: 16px; /*This code avoid zoom using mobile*/
+}
+/*----------------------------↑ Area Textarea ↑----------------------------*/
+
+
+/* =============================================== */
+/* -------------- Login Page Styles -------------- */
+/* =============================================== */
+
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+}
+
+.login-form {
+    background-color: var(--sidebar-color);
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+    width: 320px;
+    max-width: 90%;
+    text-align: center;
+}
+
+.login-form h1 {
+    color: #f3df4a;
+    margin-top: 0;
+}
+
+.login-form p {
+    color: #aaa;
+    margin-bottom: 30px;
+}
+
+.input-group {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-size: 0.9em;
+    color: #ccc;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #444;
+    background-color: #252525;
+    border-radius: 5px;
+    color: var(--writen1-color);
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+.input-group input:focus {
+    outline: none;
+    border-color: #7f4311;
+    box-shadow: 0 0 5px #7f4311;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background-color: #7f4311;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.login-btn:hover {
+    background-color: #9a541a;
+}
+
+.login-footer {
+    margin-top: 20px;
+}
+
+.login-footer a {
+    color: #aaa;
+    font-size: 0.8em;
+    text-decoration: none;
+}
+
+.login-footer a:hover {
+    text-decoration: underline;
+}
+
+/* Estilo para o indicador de status (a bolinha) */
+.status-indicator {
+    height: 10px;
+    width: 10px;
+    border-radius: 50%; /* Deixa redondo */
+    margin-right: 10px; /* Espaço entre a bolinha e o avatar */
+    flex-shrink: 0;
+}
+
+.status-online {
+    background-color: #2ecc71; /* Verde */
+}
+
+.status-offline {
+    background-color: #95a5a6; /* Cinza */
+}
+
+.message {
+  max-width: 70%;
+  padding: 8px 12px;
+  border-radius: 18px;
+  margin-bottom: 5px;
+  word-wrap: break-word;
+}
+.message.sent {
+  background-color: #0b93f6;
+  color: white;
+  align-self: flex-end; /* Alinha à direita */
+}
+.message.received {
+  background-color: #e5e5ea;
+  color: black;
+  align-self: flex-start; /* Alinha à esquerda */
+}
+.messages-area { /* Garante que as mensagens se alinhem corretamente */
+  display: flex;
+  flex-direction: column;
+}
+.no-messages-placeholder {
+  align-self: center;
+  margin-top: auto;
+  margin-bottom: auto;
+  color: #888;
+}

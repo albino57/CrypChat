@@ -1,19 +1,12 @@
-// src/config/database.js
-const sqlite3 = require('sqlite3').verbose();
-const path = require('path');
+// Este arquivo é o nosso "adaptador", ele decide qual banco de dados usar com base no ambiente.
 
-// O caminho para o nosso arquivo de banco de dados.
-// Ele será criado na raiz da pasta 'server', em uma pasta 'db'.
-const dbPath = path.resolve(__dirname, '..', '..', 'db', 'cripchat.sqlite');
-
-// Cria e exporta uma nova instância da conexão com o banco.
-// Qualquer arquivo que precisar interagir com o banco vai importar este 'db'.
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Erro ao conectar ao banco de dados:', err.message);
-    } else {
-        console.log('Conectado ao banco de dados SQLite.');
-    }
-});
-
-module.exports = db;
+// Se a variável DATABASE_URL (do Render) existir, use o plug do PostgreSQL
+if (process.env.DATABASE_URL) {
+  console.log("Ambiente de Produção detectado. Usando PostgreSQL.");
+  module.exports = require('./db-postgres');
+} 
+// Senão, use o plug do SQLite para o desenvolvimento local
+else {
+  console.log("Ambiente de Desenvolvimento detectado. Usando SQLite.");
+  module.exports = require('./db-sqlite');
+}

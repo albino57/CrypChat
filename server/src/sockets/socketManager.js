@@ -24,7 +24,7 @@ module.exports = function(io) {
       }
     });
 
-    socket.on('send_private_message', (data) => {
+    socket.on('send_private_message', async (data) => {
       console.log("\n--- NOVO EVENTO: send_private_message ---");
       console.log("[Dados Recebidos]:", data);
 
@@ -37,23 +37,20 @@ module.exports = function(io) {
         console.error("[ERRO]: Tentativa de envio de mensagem sem author_id na sessão. Abortando.");
         return;
       }
-
-      console.log("[Ação]: Tentando salvar a mensagem no banco de dados...");
-      const sql = 'INSERT INTO messages (author_id, recipient_id, body) VALUES (?, ?, ?)';
-      db.run(sql, [author_id, recipient_id, body], function(err) {
-        if (err) {
-          console.error("[ERRO no DB]: Falha ao salvar a mensagem.", err.message);
-          return;
-        }
+      
+      try {
+        console.log("[Ação]: Tentando salvar a mensagem no banco de dados...");
+        const sql = 'INSERT INTO messages (author_id, recipient_id, body) VALUES ($1, $2, $3) RETURNING id, created';
+        const result = await db.query(sql, [author_id, recipient_id, body]);
         
-        console.log(`[Sucesso no DB]: Mensagem salva com ID: ${this.lastID}`);
+        console.log(`[Sucesso no DB]: Mensagem salva com ID: ${result.rows[0].id}`);
         
         const newMessage = {
-          id: this.lastID,
+          id: result.rows[0].id,
           author_id,
           recipient_id,
           body,
-          created: new Date().toISOString()
+          created: result.rows[0].created,
         };
 
         const recipientSocketId = activeUsers[recipient_id];
@@ -67,7 +64,9 @@ module.exports = function(io) {
         console.log(`[Distribuição]: Enviando cópia da mensagem para o remetente (Socket ID: ${socket.id})`);
         io.to(socket.id).emit('receive_message', newMessage);
         console.log("--- FIM DO EVENTO ---");
-      });
+      } catch (error) {
+        console.error("Erro ao processar send_private_message:", error);
+      }
     });
   });
 };

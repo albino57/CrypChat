@@ -15,3 +15,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+
+# Pastas de dados gerados localmente
+server/db/*
+server/sessions/*

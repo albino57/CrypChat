@@ -3,12 +3,16 @@ const express = require('express'); // AQUI ESTÁ A CORREÇÃO
 const session = require('express-session');
 const FileStore = require('session-file-store')(session);
 const path = require('path');
+const fs = require('fs').promises;
 const http = require('http');
 const { Server } = require("socket.io");
 const cors = require('cors'); //Importe o pacote cors
 
 const app = express();
 const server = http.createServer(app);
+
+
+
 
 //Defina o endereço do seu frontend a partir da variável de ambiente
 const frontendURL = process.env.FRONTEND_URL || "http://localhost:5173";
@@ -51,6 +55,27 @@ app.use('/api/messages', messageRoutes);
 
 // Lógica do Socket
 require('./sockets/socketManager')(io);
+
+// ROTA SECRETA DE ADMIN PARA INICIALIZAR O BANCO DE DADOS NA PRODUÇÃO
+app.get('/admin/init-db/:secret', async (req, res) => {
+    // Compara a senha da URL com a variável de ambiente
+    if (req.params.secret !== process.env.ADMIN_SECRET) {
+        return res.status(401).send('Acesso não autorizado.');
+    }
+    try {
+        // Usa o schema do PostgreSQL, pois esta rota só será usada na produção
+        const schemaPath = path.join(__dirname, 'database', 'schema-postgres.sql');
+        const schemaSql = await fs.readFile(schemaPath, 'utf8');
+        const db = require('./config/database'); // Importa nosso adaptador
+        
+        await db.query(schemaSql); // Executa o script de criação das tabelas
+        
+        res.status(200).send('Banco de dados de produção inicializado com sucesso!');
+    } catch (error) {
+        console.error('Erro ao inicializar o banco de produção:', error);
+        res.status(500).send('Erro ao inicializar o banco: ' + error.message);
+    }
+});
 
 server.listen(PORT, () => {
     console.log(`Servidor rodando e ouvindo na porta ${PORT}`);

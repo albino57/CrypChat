@@ -2,6 +2,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importe o hook de navegação
 
+//Note que para o ambiente local, a variável é uma string vazia ''. Isso porque, no vite.config.js, nós ainda temos o proxy que redireciona as chamadas /api para http://localhost:3001
+const API_BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_BACKEND_URL : '';
+
 function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -11,7 +14,7 @@ function LoginPage() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch('/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),

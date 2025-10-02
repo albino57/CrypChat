@@ -5,6 +5,9 @@ import Sidebar from '../components/Sidebar';
 import MessageArea from '../components/MessageArea';
 import MessageInput from '../components/MessageInput';
 
+//Note que para o ambiente local, a variável é uma string vazia ''. Isso porque, no vite.config.js, nós ainda temos o proxy que redireciona as chamadas /api para http://localhost:3001
+const API_BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_BACKEND_URL : '';
+
 function ChatPage() {
   // --- Hooks e Estado ---
   const socket = useSocket(); // Pega a instância do socket criada no nosso Context
@@ -24,7 +27,7 @@ function ChatPage() {
     // Limpa as mensagens antigas antes de buscar as novas
     setMessages([]); 
     try {
-      const response = await fetch(`/api/messages/${user.username}`);
+      const response = await fetch(`${API_BASE_URL}/api/messages/${user.username}`);
       if (!response.ok) {
         throw new Error('Falha ao buscar o histórico de mensagens.');
       }
@@ -53,7 +56,7 @@ function ChatPage() {
         const loggedInUser = JSON.parse(sessionStorage.getItem('user'));
         setCurrentUser(loggedInUser);
         
-        const usersResponse = await fetch('/api/users');
+        const usersResponse = await fetch(`${API_BASE_URL}/api/users`);
         const usersData = await usersResponse.json();
         setUsers(usersData);
       } catch (error) {

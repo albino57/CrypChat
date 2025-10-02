@@ -5,18 +5,28 @@ const FileStore = require('session-file-store')(session);
 const path = require('path');
 const http = require('http');
 const { Server } = require("socket.io");
+const cors = require('cors'); //Importe o pacote cors
 
 const app = express();
 const server = http.createServer(app);
+
+//Defina o endereço do seu frontend a partir da variável de ambiente
+const frontendURL = process.env.FRONTEND_URL || "http://localhost:5173";
+
+//CORS para o Express e para o Socket.IO
+const corsOptions = {
+  origin: frontendURL,
+  credentials: true
+};
+
 const io = new Server(server, {
-  cors: {
-    origin: "http://localhost:5173",
-    methods: ["GET", "POST"],
-    credentials: true //Serve para evitar problemas de autenticação.
-  }
+  cors: corsOptions
 });
 
 const PORT = process.env.PORT || 3001;
+
+//Middleware do CORS no Express
+app.use(cors(corsOptions));
 
 const sessionMiddleware = session({
     store: new FileStore({ path: path.join(__dirname, '..', 'sessions'), logFn: function() {} }),

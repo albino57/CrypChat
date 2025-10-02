@@ -11,11 +11,11 @@ yarn-error.log*
 
 # Arquivos de ambiente (segredos)
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
+.env.*
+!.env.example
 
 # Pastas de dados gerados localmente
 server/db/*
+!server/db/.gitkeep
 server/sessions/*
+!server/sessions/.gitkeep

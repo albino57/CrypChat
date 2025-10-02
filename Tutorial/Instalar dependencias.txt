@@ -29,3 +29,6 @@ OBS:	client será o nome da pasta do nosso frontend.
 
 2- Instale a Biblioteca do Socket.IO no diretório minhaAplicação/server
 	npm install socket.io
+
+3- Instale o banco de dados PostgreSQL estando no diretório minhaAplicação/server:
+	npm install pg

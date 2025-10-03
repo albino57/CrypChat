@@ -3,8 +3,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importe o hook de navegação
 import styles from './LoginPage.module.css'; //Importando o CSS Module
 
-//No ambiente local, a variável é uma string vazia ''. Isso porque, no vite.config.js, nós ainda temos o proxy que redireciona as chamadas /api para http://localhost:3001
-const API_BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_BACKEND_URL : '';
 
 // --- Componente do Modal de Registro ---
 function RegisterModal({ onClose }) {
@@ -15,7 +13,7 @@ function RegisterModal({ onClose }) {
   const handleRegister = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+      const response = await fetch(`/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -68,7 +66,7 @@ function LoginPage() {
   const handleSubmit = async (event) => { 
     event.preventDefault();
     try {
-      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      const response = await fetch(`/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),

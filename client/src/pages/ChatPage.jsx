@@ -5,8 +5,6 @@ import Sidebar from '../components/Sidebar';
 import MessageArea from '../components/MessageArea';
 import MessageInput from '../components/MessageInput';
 
-const API_BASE_URL = import.meta.env.PROD ? import.meta.env.VITE_BACKEND_URL : '';
-
 function ChatPage() {
   const socket = useSocket();
   const [users, setUsers] = useState([]);
@@ -31,7 +29,7 @@ function ChatPage() {
       if (!loggedInUser) return;
 
       try {
-        const response = await fetch(`${API_BASE_URL}/api/users`, {
+        const response = await fetch(`/api/users`, {
           credentials: 'include'
         });
         if (!response.ok) {
@@ -75,7 +73,7 @@ function ChatPage() {
     setSelectedUser(user);
     setMessages([]);
     try {
-      const response = await fetch(`${API_BASE_URL}/api/messages/${user.username}`, {
+      const response = await fetch(`/api/messages/${user.username}`, {
         credentials: 'include'
       });
       if (!response.ok) {

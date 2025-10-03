@@ -59,7 +59,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
-/*
+
 // ROTA SECRETA DE ADMIN PARA INICIALIZAR O BANCO DE DADOS NA PRODUÇÃO
 const fs = require('fs').promises;
 app.get('/admin/init-db/:secret', async (req, res) => {
@@ -77,7 +77,7 @@ app.get('/admin/init-db/:secret', async (req, res) => {
         res.status(500).send('Erro ao inicializar o banco: ' + error.message);
     }
 });
-*/
+
 require('./sockets/socketManager')(io);
 
 server.listen(PORT, () => {

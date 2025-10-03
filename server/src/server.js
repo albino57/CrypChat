@@ -54,6 +54,9 @@ app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
 const fs = require('fs').promises;
+
+/*
+// ROTA SECRETA DE ADMIN PARA INICIALIZAR O BANCO DE DADOS NA PRODUÇÃO
 app.get('/admin/init-db/:secret', async (req, res) => {
     if (req.params.secret !== process.env.ADMIN_SECRET) {
         return res.status(401).send('Acesso não autorizado.');
@@ -69,7 +72,7 @@ app.get('/admin/init-db/:secret', async (req, res) => {
         res.status(500).send('Erro ao inicializar o banco: ' + error.message);
     }
 });
-
+*/
 require('./sockets/socketManager')(io);
 
 server.listen(PORT, () => {

@@ -4,7 +4,6 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session); //novo gerenciador
 const db = require('./config/database'); //adaptador de DB
 const path = require('path');
-const fs = require('fs').promises;
 const http = require('http');
 const { Server } = require("socket.io");
 const cors = require('cors');

@@ -4,6 +4,7 @@ const session = require('express-session');
 const pgSession = require('connect-pg-simple')(session); //novo gerenciador
 const db = require('./config/database'); //adaptador de DB
 const path = require('path');
+const fs = require('fs').promises;
 const http = require('http');
 const { Server } = require("socket.io");
 const cors = require('cors');
@@ -30,10 +31,11 @@ app.use(cors(corsOptions));
 
 const isProduction = process.env.NODE_ENV === 'production';
 
+//Configura o sessionMiddleware para usar o banco de dados
 const sessionMiddleware = session({
     store: new pgSession({
-        pool: db.pool, // Usa o pool de conexão do nosso banco PostgreSQL
-        tableName: 'user_sessions' // Nome da tabela que ele vai criar automaticamente
+        pool: db.pool, //Usa o pool de conexão do banco PostgreSQL
+        tableName: 'user_sessions' //Nome da tabela que ele vai criar automaticamente
     }),
     secret: process.env.SESSION_SECRET || 'uma-chave-secreta-de-desenvolvimento',
     resave: false,
@@ -57,10 +59,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/messages', messageRoutes);
 
-const fs = require('fs').promises;
-
 /*
 // ROTA SECRETA DE ADMIN PARA INICIALIZAR O BANCO DE DADOS NA PRODUÇÃO
+const fs = require('fs').promises;
 app.get('/admin/init-db/:secret', async (req, res) => {
     if (req.params.secret !== process.env.ADMIN_SECRET) {
         return res.status(401).send('Acesso não autorizado.');

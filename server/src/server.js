@@ -32,13 +32,21 @@ const PORT = process.env.PORT || 3001;
 //Middleware do CORS no Express
 app.use(cors(corsOptions));
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const sessionMiddleware = session({
     store: new FileStore({ path: path.join(__dirname, '..', 'sessions'), logFn: function() {} }),
     secret: process.env.SESSION_SECRET || 'uma-chave-secreta-de-desenvolvimento',
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 }
+    cookie: { 
+        maxAge: 1000 * 60 * 60 * 24,
+        //Configurações cruciais para o cookie funcionar em produção (cross-domain)
+        secure: isProduction, //Em produção, o cookie só será enviado via HTTPS
+        sameSite: isProduction ? 'none' : 'lax' //Permite o envio do cookie de um domínio diferente
+    }
 });
+
 app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 

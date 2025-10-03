@@ -35,3 +35,6 @@ OBS:	client será o nome da pasta do nosso frontend.
 
 4- Instale o pacote Cors na pasta diretório_principal/server:
 	npm install cors
+
+5- Instale o Gerenciador de Sessão
+	npm install connect-pg-simple

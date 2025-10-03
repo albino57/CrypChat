@@ -1,7 +1,8 @@
 require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
-const FileStore = require('session-file-store')(session);
+const pgSession = require('connect-pg-simple')(session); //novo gerenciador
+const db = require('./config/database'); //adaptador de DB
 const path = require('path');
 const http = require('http');
 const { Server } = require("socket.io");
@@ -30,12 +31,15 @@ app.use(cors(corsOptions));
 const isProduction = process.env.NODE_ENV === 'production';
 
 const sessionMiddleware = session({
-    store: new FileStore({ path: path.join(__dirname, '..', 'sessions'), logFn: function() {} }),
+    store: new pgSession({
+        pool: db.pool, // Usa o pool de conexão do nosso banco PostgreSQL
+        tableName: 'user_sessions' // Nome da tabela que ele vai criar automaticamente
+    }),
     secret: process.env.SESSION_SECRET || 'uma-chave-secreta-de-desenvolvimento',
     resave: false,
     saveUninitialized: false,
     cookie: { 
-        maxAge: 1000 * 60 * 60 * 24,
+        maxAge: 30 * 24 * 60 * 60 * 1000, // 30 dias
         secure: isProduction,
         sameSite: isProduction ? 'none' : 'lax'
     }

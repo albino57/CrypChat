@@ -27,7 +27,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-//ROTA DE ADMIN VEM PRIMEIRO, ANTES DA SESSÃO!
+// ROTA DE ADMIN VEM PRIMEIRO, ANTES DA SESSÃO!
 app.get('/admin/init-db/:secret', async (req, res) => {
     if (req.params.secret !== process.env.ADMIN_SECRET) {
         return res.status(401).send('Acesso não autorizado.');
@@ -43,7 +43,7 @@ app.get('/admin/init-db/:secret', async (req, res) => {
     }
 });
 
-//AGORA INICIAMOS A SESSÃO PARA TODAS AS OUTRAS ROTAS
+// AGORA SIM, INICIAMOS A SESSÃO PARA TODAS AS OUTRAS ROTAS
 const isProduction = process.env.NODE_ENV === 'production';
 const sessionMiddleware = session({
     store: new pgSession({
@@ -56,14 +56,13 @@ const sessionMiddleware = session({
     cookie: { 
         maxAge: 30 * 24 * 60 * 60 * 1000,
         secure: isProduction,
-        sameSite: isProduction ? 'none' : 'lax',
-        domain: isProduction ? '.onrender.com' : undefined
+        sameSite: isProduction ? 'none' : 'lax'
     }
 });
 app.use(sessionMiddleware);
 io.engine.use(sessionMiddleware);
 
-//ROTAS PRINCIPAIS DA APLICAÇÃO
+// ROTAS PRINCIPAIS DA APLICAÇÃO
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const messageRoutes = require('./routes/messageRoutes');
